@@ -198,9 +198,7 @@ You can use the **SRH Demo** button to auto-fill these values.
 
 ## 👨‍💻 Author
 
-**Vasamshetty Renusri**  
-Deloitte US-India Analyst Trainee | IT & Networking Enthusiast  
-*Built as a Machine Learning capstone project*
+**Routhu Satya Hemesh**  
 
 ---
 
