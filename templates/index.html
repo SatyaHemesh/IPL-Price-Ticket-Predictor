@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPL Ticket Price Predictor</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- ═══════════════════════════  NAVBAR  ═══════════════════════════ -->
+<nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
+  <div class="container-xl">
+    <!-- Brand / Logo -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+      <svg class="nav-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"
+           aria-label="IPL Ticket Price Predictor Logo">
+        <circle cx="20" cy="20" r="19" stroke="#f97316" stroke-width="2"/>
+        <path d="M12 28 L20 10 L28 28" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="22" x2="26" y2="22" stroke="#f97316" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="20" cy="10" r="2.5" fill="#f97316"/>
+      </svg>
+      <span class="brand-text">IPL <span class="brand-accent">Price</span> Predictor</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navCollapse" aria-controls="navCollapse"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navCollapse">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        <li class="nav-item">
+          <a class="nav-link" href="#predictor-section">
+            <i class="bi bi-magic me-1"></i>Predict
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#history-section">
+            <i class="bi bi-clock-history me-1"></i>History
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#about-section">
+            <i class="bi bi-info-circle me-1"></i>About
+          </a>
+        </li>
+        <li class="nav-item ms-2">
+          <button class="btn btn-sm btn-outline-orange" id="themeToggle"
+                  aria-label="Toggle theme" title="Toggle dark/light mode">
+            <i class="bi bi-sun-fill"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════  HERO  ═══════════════════════════ -->
+<header class="hero-section">
+  <div class="hero-bg-gradient"></div>
+  <div class="hero-particles" id="heroParticles"></div>
+  <div class="container-xl position-relative z-2">
+    <div class="row align-items-center min-vh-hero">
+      <div class="col-lg-7">
+        <div class="hero-badge mb-3">
+          <i class="bi bi-broadcast-pin me-2"></i>LIVE SEASON 2025
+        </div>
+        <h1 class="hero-title">
+          Predict Your <br/>
+          <span class="hero-accent">IPL Match</span> <br/>
+          Ticket Price
+        </h1>
+        <p class="hero-subtitle">
+          AI-powered ticket price estimation using real historical IPL data.
+          Get instant price predictions for any match, stadium, and seat category.
+        </p>
+        <div class="hero-stats d-flex flex-wrap gap-4 mt-4">
+          <div class="stat-pill">
+            <span class="stat-num">96.7%</span>
+            <span class="stat-label">Accuracy (R²)</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-num">1,200+</span>
+            <span class="stat-label">Training Records</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-num">10</span>
+            <span class="stat-label">IPL Teams</span>
+          </div>
+        </div>
+        <a href="#predictor-section" class="btn btn-primary-orange mt-4">
+          <i class="bi bi-arrow-down-circle me-2"></i>Get Your Price
+        </a>
+      </div>
+      <div class="col-lg-5 d-none d-lg-block text-center">
+        <div class="hero-ticket-card">
+          <div class="ticket-stub">
+            <div class="ticket-header">
+              <span class="team-badge">SRH</span>
+              <span class="vs-text">VS</span>
+              <span class="team-badge team-badge-away">MI</span>
+            </div>
+            <div class="ticket-body">
+              <div class="ticket-row">
+                <span class="t-label">Venue</span>
+                <span class="t-value">Rajiv Gandhi Intl. Stadium</span>
+              </div>
+              <div class="ticket-row">
+                <span class="t-label">Date</span>
+                <span class="t-value">26 June 2026 &bull; 7:30 PM</span>
+              </div>
+              <div class="ticket-row">
+                <span class="t-label">Seat</span>
+                <span class="t-value">VIP &bull; Premium Stand</span>
+              </div>
+            </div>
+            <div class="ticket-price-strip">
+              <span class="price-label">Predicted Price</span>
+              <span class="price-hero">₹2,150</span>
+            </div>
+            <div class="ticket-barcode"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════  PREDICTOR FORM  ═══════════════════════ -->
+<section id="predictor-section" class="predictor-section py-5">
+  <div class="container-xl">
+    <div class="section-header text-center mb-5">
+      <span class="section-badge">AI Predictor</span>
+      <h2 class="section-title">Match Details</h2>
+      <p class="section-subtitle">Fill in the match information to get an accurate price estimate</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      <!-- ── FORM CARD ── -->
+      <div class="col-lg-8">
+        <div class="form-card">
+          <form id="predictionForm" novalidate>
+
+            <!-- Row 1: Date + Time + Match Type -->
+            <div class="form-section-label">
+              <i class="bi bi-calendar3 me-2"></i>Match Schedule
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-md-4">
+                <label class="form-label" for="match_date">Match Date</label>
+                <input type="date" class="form-control ipl-input" id="match_date"
+                       name="match_date" required value="2026-06-26">
+                <div class="invalid-feedback">Please select a match date.</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="match_time">Match Time</label>
+                <select class="form-select ipl-input" id="match_time" name="match_time">
+                  <option value="7:30 PM" selected>7:30 PM (Evening)</option>
+                  <option value="3:30 PM">3:30 PM (Afternoon)</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="match_type">Match Type</label>
+                <select class="form-select ipl-input" id="match_type" name="match_type">
+                  <option value="League">League Match</option>
+                  <option value="Qualifier">Qualifier</option>
+                  <option value="Eliminator">Eliminator</option>
+                  <option value="Final">Final</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 2: Stadium -->
+            <div class="form-section-label">
+              <i class="bi bi-geo-alt me-2"></i>Venue
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-12">
+                <label class="form-label" for="stadium">Stadium</label>
+                <select class="form-select ipl-input" id="stadium" name="stadium" required>
+                  {% for s in stadiums %}
+                  <option value="{{ s }}" {% if s == "Rajiv Gandhi International Stadium" %}selected{% endif %}>
+                    {{ s }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 3: Teams -->
+            <div class="form-section-label">
+              <i class="bi bi-trophy me-2"></i>Teams
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label" for="home_team">Home Team</label>
+                <select class="form-select ipl-input" id="home_team" name="home_team" required>
+                  {% for t in teams %}
+                  <option value="{{ t }}" {% if t == "SRH" %}selected{% endif %}>{{ t }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="away_team">Away Team</label>
+                <select class="form-select ipl-input" id="away_team" name="away_team" required>
+                  {% for t in teams %}
+                  <option value="{{ t }}" {% if t == "MI" %}selected{% endif %}>{{ t }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 4: Seat + Stand -->
+            <div class="form-section-label">
+              <i class="bi bi-grid me-2"></i>Seating
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label" for="seat_category">Seat Category</label>
+                <select class="form-select ipl-input" id="seat_category" name="seat_category">
+                  {% for cat in seat_categories %}
+                  <option value="{{ cat }}">{{ cat }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="stand_type">Stand Type</label>
+                <select class="form-select ipl-input" id="stand_type" name="stand_type">
+                  <option value="East">East</option>
+                  <option value="West">West</option>
+                  <option value="North">North</option>
+                  <option value="South">South</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 5: Conditions -->
+            <div class="form-section-label">
+              <i class="bi bi-cloud-sun me-2"></i>Match Conditions
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-md-4">
+                <label class="form-label" for="weather">Weather</label>
+                <select class="form-select ipl-input" id="weather" name="weather">
+                  <option value="Sunny">☀️ Sunny</option>
+                  <option value="Cloudy">☁️ Cloudy</option>
+                  <option value="Partly Cloudy">⛅ Partly Cloudy</option>
+                  <option value="Rainy">🌧️ Rainy</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="demand_level">Demand Level</label>
+                <select class="form-select ipl-input" id="demand_level" name="demand_level">
+                  <option value="Low">Low</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="High">High</option>
+                  <option value="Very High">Very High</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="match_time2">Day/Holiday</label>
+                <div class="d-flex gap-3 mt-2">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="weekend_check"
+                           name="weekend" value="Yes">
+                    <label class="form-check-label" for="weekend_check">Weekend</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="holiday_check"
+                           name="holiday" value="Yes">
+                    <label class="form-check-label" for="holiday_check">Holiday</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 6: Booking -->
+            <div class="form-section-label">
+              <i class="bi bi-ticket-perforated me-2"></i>Booking Details
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label" for="days_before_match">
+                  Days Before Match
+                  <span class="badge bg-orange ms-2" id="daysLabel">7</span>
+                </label>
+                <input type="range" class="form-range ipl-range" id="days_before_match"
+                       name="days_before_match" min="0" max="30" value="7"
+                       oninput="document.getElementById('daysLabel').textContent=this.value">
+                <div class="d-flex justify-content-between">
+                  <small class="text-muted">Day of match</small>
+                  <small class="text-muted">30 days prior</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="available_seats">Available Seats</label>
+                <input type="number" class="form-control ipl-input" id="available_seats"
+                       name="available_seats" value="3500" min="0" max="130000">
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex flex-wrap gap-3">
+              <button type="submit" class="btn btn-primary-orange btn-predict" id="predictBtn">
+                <i class="bi bi-magic me-2"></i>
+                <span class="btn-text">Predict Ticket Price</span>
+                <span class="btn-spinner d-none">
+                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Predicting...
+                </span>
+              </button>
+              <button type="button" class="btn btn-outline-secondary btn-reset" id="resetBtn">
+                <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
+              </button>
+              <button type="button" class="btn btn-outline-secondary btn-shrh"
+                      id="srhDemoBtn" title="Load SRH vs MI demo for 26 June 2026">
+                <i class="bi bi-cricket me-2"></i>SRH Demo
+              </button>
+            </div>
+
+          </form><!-- /form -->
+        </div><!-- /form-card -->
+      </div><!-- /col-lg-8 -->
+
+      <!-- ── RESULT SIDEBAR ── -->
+      <div class="col-lg-4">
+        <!-- Placeholder state -->
+        <div class="result-placeholder" id="resultPlaceholder">
+          <div class="placeholder-icon">
+            <i class="bi bi-ticket-perforated-fill"></i>
+          </div>
+          <h5>Ready to Predict</h5>
+          <p>Fill in the match details and click <strong>Predict Ticket Price</strong> to get an instant estimate.</p>
+          <ul class="feature-list">
+            <li><i class="bi bi-check-circle-fill text-orange me-2"></i>10 IPL Teams Covered</li>
+            <li><i class="bi bi-check-circle-fill text-orange me-2"></i>10 Major Stadiums</li>
+            <li><i class="bi bi-check-circle-fill text-orange me-2"></i>5 Seat Categories</li>
+            <li><i class="bi bi-check-circle-fill text-orange me-2"></i>Gradient Boosting Model</li>
+          </ul>
+        </div>
+
+        <!-- Error state -->
+        <div class="result-error d-none" id="resultError">
+          <div class="error-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+          <h5>Prediction Error</h5>
+          <p id="errorMessage">Something went wrong. Please try again.</p>
+        </div>
+
+        <!-- Prediction result -->
+        <div class="result-card d-none" id="resultCard">
+          <div class="result-header">
+            <span class="result-badge"><i class="bi bi-check-circle me-1"></i>Prediction Ready</span>
+            <button class="btn btn-sm btn-download ms-auto" id="downloadBtn"
+                    title="Download prediction">
+              <i class="bi bi-download"></i>
+            </button>
+          </div>
+
+          <div class="match-teams mt-3" id="resultTeams">—</div>
+
+          <div class="result-price-block">
+            <div class="price-label">Predicted Ticket Price</div>
+            <div class="price-value" id="resultPrice">₹—</div>
+            <div class="price-range" id="priceRange">
+              <i class="bi bi-arrows-expand me-1"></i>Range: <span id="rangeText">—</span>
+            </div>
+          </div>
+
+          <div class="result-meta" id="resultMeta">
+            <div class="meta-row">
+              <span class="meta-label"><i class="bi bi-geo-alt me-1"></i>Stadium</span>
+              <span class="meta-value" id="meta_stadium">—</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label"><i class="bi bi-grid me-1"></i>Seat</span>
+              <span class="meta-value" id="meta_seat">—</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label"><i class="bi bi-calendar-event me-1"></i>Day</span>
+              <span class="meta-value" id="meta_day">—</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label"><i class="bi bi-trophy me-1"></i>Match Type</span>
+              <span class="meta-value" id="meta_match_type">—</span>
+            </div>
+          </div>
+
+          <div class="confidence-bar-section mt-3">
+            <div class="d-flex justify-content-between mb-1">
+              <small class="text-muted">Model Confidence</small>
+              <small class="confidence-pct" id="confidencePct">—</small>
+            </div>
+            <div class="confidence-track">
+              <div class="confidence-fill" id="confidenceFill" style="width:0%"></div>
+            </div>
+          </div>
+
+        </div><!-- /result-card -->
+      </div><!-- /col-lg-4 -->
+    </div><!-- /row -->
+  </div><!-- /container -->
+</section>
+
+
+<!-- ═══════════════════════  PREDICTION HISTORY  ═══════════════════════ -->
+<section id="history-section" class="history-section py-5">
+  <div class="container-xl">
+    <div class="section-header d-flex align-items-center justify-content-between mb-4">
+      <div>
+        <span class="section-badge">Records</span>
+        <h2 class="section-title mb-0">Prediction History</h2>
+      </div>
+      <button class="btn btn-sm btn-outline-danger" id="clearHistoryBtn">
+        <i class="bi bi-trash me-1"></i>Clear All
+      </button>
+    </div>
+    <div id="historyContainer">
+      <div class="history-empty" id="historyEmpty">
+        <i class="bi bi-clock-history history-empty-icon"></i>
+        <p>No predictions yet. Make your first prediction above!</p>
+      </div>
+      <div class="row g-3" id="historyList"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════  ABOUT / HOW IT WORKS  ═══════════════════════ -->
+<section id="about-section" class="about-section py-5">
+  <div class="container-xl">
+    <div class="section-header text-center mb-5">
+      <span class="section-badge">About</span>
+      <h2 class="section-title">How It Works</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="about-step">
+          <div class="step-num">01</div>
+          <h5>Data Collection</h5>
+          <p>1,200+ historical IPL match records spanning 10 teams, 10 stadiums, and 5 seat categories.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="about-step">
+          <div class="step-num">02</div>
+          <h5>Feature Engineering</h5>
+          <p>Categorical encoding, demand signals, rivalry flags, and match-type multipliers are derived from raw data.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="about-step">
+          <div class="step-num">03</div>
+          <h5>Model Training</h5>
+          <p>Four models compared (Linear, Decision Tree, Random Forest, Gradient Boosting). Best selected by R².</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="about-step">
+          <div class="step-num">04</div>
+          <h5>Prediction</h5>
+          <p>Gradient Boosting Regressor (R² = 96.7%) returns instant ticket price estimates via Flask API.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Model comparison table -->
+    <div class="model-table-card mt-5">
+      <h5 class="mb-3"><i class="bi bi-bar-chart-steps me-2 text-orange"></i>Model Comparison</h5>
+      <div class="table-responsive">
+        <table class="table ipl-table mb-0">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>MAE (₹)</th>
+              <th>RMSE (₹)</th>
+              <th>R² Score</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Linear Regression</td>
+              <td>2,274</td>
+              <td>2,603</td>
+              <td>-0.016</td>
+              <td><span class="badge bg-secondary">Baseline</span></td>
+            </tr>
+            <tr>
+              <td>Decision Tree Regressor</td>
+              <td>539</td>
+              <td>897</td>
+              <td>0.879</td>
+              <td><span class="badge bg-info text-dark">Good</span></td>
+            </tr>
+            <tr>
+              <td>Random Forest Regressor</td>
+              <td>444</td>
+              <td>702</td>
+              <td>0.926</td>
+              <td><span class="badge bg-warning text-dark">Better</span></td>
+            </tr>
+            <tr class="best-model-row">
+              <td><strong>Gradient Boosting Regressor</strong></td>
+              <td><strong>316</strong></td>
+              <td><strong>468</strong></td>
+              <td><strong>0.967</strong></td>
+              <td><span class="badge bg-orange">✓ Selected</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════  FOOTER  ═══════════════════════════ -->
+<footer class="ipl-footer py-4">
+  <div class="container-xl d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div>
+      <span class="footer-brand">IPL Ticket Price Predictor</span>
+      <span class="text-muted ms-2 footer-byline">— ML Capstone Project &middot; Vasamshetty Renusri</span>
+    </div>
+    <div class="footer-links d-flex gap-3">
+      <span class="text-muted"><i class="bi bi-cpu me-1"></i>Gradient Boosting Regressor</span>
+      <span class="text-muted"><i class="bi bi-database me-1"></i>1,200 Records</span>
+      <span class="text-muted"><i class="bi bi-flask me-1"></i>Flask + Scikit-Learn</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════  LOADING OVERLAY  ═══════════════════════ -->
+<div class="loading-overlay d-none" id="loadingOverlay">
+  <div class="loading-content">
+    <div class="cricket-loader">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="26" stroke="#f97316" stroke-width="3" stroke-dasharray="163.4" stroke-dashoffset="0" class="loader-circle"/>
+        <path d="M22 36 L30 18 L38 36" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="24" y1="30" x2="36" y2="30" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="loading-text">Calculating price...</p>
+  </div>
+</div>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JS -->
+<script>
+  // Pass Jinja2 variable to JS
+  const STAND_MAP = {{ stand_map | safe }};
+</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

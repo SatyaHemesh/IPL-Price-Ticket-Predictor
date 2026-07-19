@@ -1,0 +1,103 @@
+
+╔══════════════════════════════════════════════════════════════════════╗
+║        IPL TICKET PRICE PREDICTOR — 3-MINUTE EXPLANATION            ║
+║        (Suitable for technical interview / video recording)          ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+Hi, I'm going to walk you through my Machine Learning project:
+the IPL Ticket Price Predictor.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. PROBLEM STATEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IPL ticket prices vary widely — a VIP seat at a CSK vs MI clash
+can cost 5× more than an Economy seat at a mid-week league match.
+The goal is to build a regression model that takes in match-related
+parameters and predicts the expected ticket price.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. DATASET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+I generated 1,200 synthetic but realistic IPL records spanning:
+  - 10 IPL teams (CSK, MI, RCB, SRH, KKR, GT, LSG, PBKS, DC, RR)
+  - 10 major stadiums (Wankhede, Chepauk, Eden Gardens, etc.)
+  - 5 seat categories: Economy, Standard, Premium, VIP, Corporate
+  - 23 features: date, time, weather, demand, availability, etc.
+The target variable is Predicted_Price, ranging from ₹450 to ₹13,000+.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. DATA CLEANING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The dataset had zero missing values. I dropped non-predictive columns
+like Match_Date (used only to derive Match_Day) and Base_Price
+to avoid data leakage.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. FEATURE ENGINEERING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+All 15 categorical features — including Stadium, Teams, Weather,
+Seat Category, and Demand Level — were label-encoded using
+Scikit-Learn's LabelEncoder. I persisted these encoders to
+model_artifacts/encoders.pkl so the Flask app can apply identical
+encoding at inference time.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. MODEL SELECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+I trained and compared four models on an 80/20 train-test split:
+
+  1. Linear Regression     → R² = -0.016  (too simple)
+  2. Decision Tree         → R² = 0.879
+  3. Random Forest         → R² = 0.926
+  4. Gradient Boosting     → R² = 0.967  ← SELECTED ✓
+
+Gradient Boosting won because it builds trees sequentially,
+each correcting the residual errors of the previous — ideal for
+the non-linear multiplicative price dynamics in this dataset.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. TRAINING & EVALUATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Final model metrics on the test set:
+  MAE  = ₹316   (average prediction error)
+  RMSE = ₹468
+  R²   = 0.967  (96.7% variance explained)
+The model was saved to model.pkl using Python's pickle module.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. FLASK INTEGRATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The Flask app (application.py) loads model.pkl and the encoders
+at startup. The /predict endpoint:
+  - Receives a POST form submission
+  - Derives City, Opponent Popularity, and Stadium Capacity
+  - Encodes all categorical inputs using the saved encoders
+  - Assembles the 20-feature vector in exact training order
+  - Returns the predicted price as JSON
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8. UI & OUTPUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The UI is IPL-inspired: dark blue background, orange accent.
+Features include:
+  - Dynamic stand options based on seat category
+  - Auto-detected weekend flag from selected date
+  - Animated count-up price display
+  - Confidence range (±12%)
+  - Prediction history (last 10 predictions)
+  - Download prediction as .txt report
+  - SRH Demo button for the June 26, 2026 test case
+  - Dark/Light theme toggle
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. DEMO: SPECIAL CASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+For June 26, 2026 — SRH vs MI at Rajiv Gandhi International Stadium
+at 7:30 PM — the model predicts approximately ₹1,700–₹2,500 for
+VIP stands, which aligns with realistic IPL pricing for SRH home games.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Thank you. This project demonstrates end-to-end ML engineering:
+data generation → feature engineering → model selection →
+serialization → REST API → production-quality frontend.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
